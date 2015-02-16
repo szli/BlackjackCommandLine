@@ -189,7 +189,12 @@ class Dealer:
             all_player_lost = reduce(lambda x,y: x and y, map(lambda x: x.lost, active_players))
             if not all_player_lost:
                 #Dealer Actions
-                while self.dealer_cards.soft_sum <= 17: #if the soft sum <= 17, has to hit:
+
+                while True:
+                    if self.dealer_cards.soft_sum > 17: #if <=17 has to draw
+                        input = raw_input("Dealer Wants Hit[Y/N]?")
+                        if input == 'N':
+                            break
                     bust = self.dealer_cards.add(self.deck.get_cards(1))
                     print "Dealer cards:" + self.dealer_cards.__repr__()
                     if bust:#Dealer bust
