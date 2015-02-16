@@ -138,7 +138,7 @@ class Dealer:
 
     def __init__(self, n_players, cur_money):
         self.deck = SingleDeck()
-        self.players = [Player(i, 100) for i in range(0, n_players)]
+        self.players = [Player(i, 100) for i in range(0, n_players)] #Assuming initial money for each player is 100
         self.dealer_cards = CardGroup()
         self.busted = False
         self.cur_money = cur_money
