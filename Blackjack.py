@@ -80,7 +80,7 @@ class CardGroup:
     def _get_points(card):
         if card == 'A':
             return 11 #treats A as 11, soft
-        if card == '10' or card == 'J' or card == 'Q' or card == 'K' or card == 'A':
+        if card == '10' or card == 'J' or card == 'Q' or card == 'K':
             return 10
         if ord('9') >= ord(card) >= ord('2'):
             return ord(card) - ord('0')
