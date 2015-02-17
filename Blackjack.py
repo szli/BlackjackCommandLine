@@ -57,6 +57,9 @@ class Player:
             if self.dd_applied and user_input !='S':
                 print "Double down before, has to Stand"
                 continue
+            if len(self.cards.cards) == 5 and user_input != 'S':
+                print "Already has five cards, cannot Hit or DoubleDown"
+                continue
             succ = user_input in ['H','S','DD']
             if not succ: print "Invalid action %s" % user_input
         return user_input
@@ -75,7 +78,9 @@ class Player:
 class CardGroup:
     @staticmethod
     def _get_points(card):
-        if card == '10' or card == 'J' or card == 'Q' or card == 'K' or card == 'A': #treats A as 10, soft
+        if card == 'A':
+            return 11 #treats A as 11, soft
+        if card == '10' or card == 'J' or card == 'Q' or card == 'K' or card == 'A':
             return 10
         if ord('9') >= ord(card) >= ord('2'):
             return ord(card) - ord('0')
@@ -97,12 +102,12 @@ class CardGroup:
             self.hasA = True
         self.cards.extend(new_cards)
         self.soft_sum += sum(map(self._get_points, new_cards))
-        self.fav_sum = self.soft_sum - 9 if self.soft_sum > 21 and self.hasA else self.soft_sum
-        self.busted = (not self.hasA and self.soft_sum > 21) or (self.hasA and self.soft_sum - 9 > 21)
+        self.fav_sum = self.soft_sum - 10 if self.soft_sum > 21 and self.hasA else self.soft_sum
+        self.busted = (not self.hasA and self.soft_sum > 21) or (self.hasA and self.soft_sum - 10 > 21)
         return self.busted
 
     def __repr__(self):
-        return "cards = " + ','.join(self.cards) + " sum = " + (str(self.soft_sum) if self.hasA == False else str(self.soft_sum) + "/" + str(self.soft_sum - 9))
+        return "cards = " + ','.join(self.cards) + " sum = " + (str(self.soft_sum) if self.hasA == False else str(self.soft_sum) + "/" + str(self.soft_sum - 10))
 
 
 class Deck:
@@ -195,6 +200,9 @@ class Dealer:
                         input = raw_input("Dealer Wants Hit[Y/N]?")
                         if input == 'N':
                             break
+                    if len(self.dealer_cards.cards ) == 5:
+                        print "Dealer already got five cards, not draw new cards"
+                        break
                     bust = self.dealer_cards.add(self.deck.get_cards(1))
                     print "Dealer cards:" + self.dealer_cards.__repr__()
                     if bust:#Dealer bust
